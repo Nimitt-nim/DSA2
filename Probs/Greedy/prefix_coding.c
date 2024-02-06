@@ -1,6 +1,32 @@
 #include<stdio.h>
 #include<stdlib.h>
 
+
+// Tree
+typedef struct{
+    int key;
+    int value;
+    struct tree_node* left;
+    struct tree_node* right;
+}tree_node;
+
+tree_node* init_tree_node(int key, int value){
+    tree_node* tn = (tree_node*)malloc(sizeof(tree_node));
+    tn -> left = NULL;
+    tn -> right = NULL;
+    tn -> key = key;
+    tn -> value = value;
+    return tn;
+}
+
+tree_node* combine_nodes(tree_node* node1, tree_node* node2){
+    tree_node* parent_node = init_tree_node(-1, node1->value+node2->value);
+    parent_node->left = node1;
+    parent_node->right = node2;
+    return parent_node;
+}
+// Tree
+
 /// Min Priority Queue
 typedef struct{
     tree_node** nodes;
@@ -9,7 +35,9 @@ typedef struct{
 
 priority_q* init_priority_q(int capacity){
     priority_q* pq = (priority_q*)malloc(sizeof(priority_q));
-    pq->nodes = (tree_node**)malloc(capacity*sizeof(tree_node*));
+    for (int i = 0; i < capacity; i++){
+        pq->nodes[i] = (tree_node*)malloc(capacity*sizeof(tree_node));
+    }
     pq->size = 0;
     return pq;
 }
@@ -43,7 +71,7 @@ void shift_down(priority_q* q, int i){
         largest = r;
     }
     if (largest != i){
-        swap(&q->nodes[i], &q->nodes[largest]);
+        swap(q->nodes[i], q->nodes[largest]);
         shift_down(q, largest);
     }
 }
@@ -79,28 +107,6 @@ int extract_min(priority_q* q){
 }
 /// Min Priority Queue
 
-// Tree
-typedef struct{
-    int key;
-    int value;
-    tree_node* left;
-    tree_node* right;
-}tree_node;
-
-tree_node* init_tree_node(int key, int value){
-    tree_node* tn = (tree_node*)malloc(sizeof(tree_node));
-    tn -> left = NULL;
-    tn -> right = NULL;
-    tn -> key = key;
-    tn -> value = value;
-}
-
-tree_node* combine_nodes(tree_node* node1, tree_node* node2){
-    tree_node* parent_node = init_tree_node(-1, node1->value+node2->value);
-    parent_node->left = node1;
-    parent_node->right = node2;
-}
-// Tree
 
 // what data structure to use ?: Damn, settled to a simple one
 
@@ -128,7 +134,7 @@ int main(){
     // scanf("%d",&n);
     n = 4;
 
-    int* A = (int**)malloc(n*sizeof(int*));
+    int* A = (int*)malloc(n*sizeof(int));
 
 
     A[0] = 3;        // A[i][1] = frequency of the alphabet
