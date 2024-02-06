@@ -1,19 +1,15 @@
 #include<stdio.h>
-
-#include<stdio.h>
+#include<stdlib.h>
 
 /// Min Priority Queue
-
 typedef struct{
-    int* keys;
-    int* values;
+    tree_node** nodes;
     int size;
 }priority_q;
 
 priority_q* init_priority_q(int capacity){
     priority_q* pq = (priority_q*)malloc(sizeof(priority_q));
-    pq->keys = (int*)malloc(capacity*sizeof(int));
-    pq->values = (int*)malloc(capacity*sizeof(int));
+    pq->nodes = (tree_node**)malloc(capacity*sizeof(tree_node*));
     pq->size = 0;
     return pq;
 }
@@ -30,47 +26,50 @@ int parent(int i){
     return (i-1)/2;
 }
 
+void swap(tree_node* num1, tree_node* num2){
+    tree_node temp = *num1;
+    *num1 = *num2;
+    *num2 = temp;
+}
+
 void shift_down(priority_q* q, int i){
     int l = left_child(i);
     int r = right_child(i);
-    if (l < q->size && q->keys[l] > q->keys[i]){
-        int temp = q->keys[i];
-        q->keys[i] = q->keys[l];
-        q->keys[l] = temp;
-        shift_down(q, l);
+    int largest = i;
+    if (l < q->size && q->nodes[l] > q->nodes[i]){
+        largest = l;
     }
-    else if (r < q->size && q->keys[r] < q->keys[i]){
-        int temp = q->keys[i];
-        q->keys[i] = q->keys[l];
-        q->keys[l] = temp;
-        shift_down(q, r);
+    else if (r < q->size && q->nodes[r] < q->nodes[i]){
+        largest = r;
+    }
+    if (largest != i){
+        swap(&q->nodes[i], &q->nodes[largest]);
+        shift_down(q, largest);
     }
 }
 
 void shift_up(priority_q* q, int i){
-    int p = parent(i);
-    while (i > 0 && q->keys[p] < q->keys[i]){
-        int temp = q->keys[i];
-        q->keys[i] = q->keys[p];
-        q->keys[p] = temp;
-        i = p;
+    while (i > 0 && q->nodes[parent(i)] < q->nodes[i]){
+        swap(q->nodes[i], q->nodes[parent(i)]);
+        i = parent(i);
     }
 }
 
 void insert(priority_q* q,  int key, int value){
+    tree_node* node = init_tree_node(key, value);
     q->size = q->size+1;
-    q->keys[q->size] = key;
+    q->nodes[q->size] = node;
     shift_up(q, q->size);
 }
 
-void delete(priority_q* q, int value){
+// void delete(priority_q* q, int value){
 
-}
+// }
 
-void extract_min(priority_q* q){
+int extract_min(priority_q* q){
     if (q->size > 0){
-        int temp = q->keys[0];
-        q->keys[0] = q->keys[q->size-1];
+        int temp = q->nodes[0]->value;
+        q->nodes[0] = q->nodes[q->size-1];
         q->size = q->size - 1;
         shift_down(q, 0); 
         return temp;
@@ -79,9 +78,47 @@ void extract_min(priority_q* q){
         return -1;
     }
 }
-
 /// Min Priority Queue
 
+// Tree
+typedef struct{
+    int key;
+    int value;
+    tree_node* left;
+    tree_node* right;
+}tree_node;
+
+tree_node* init_tree_node(int key, int value){
+    tree_node* tn = (tree_node*)malloc(sizeof(tree_node));
+    tn -> left = NULL;
+    tn -> right = NULL;
+    tn -> key = key;
+    tn -> value = value;
+}
+
+tree_node* combine_nodes(tree_node* node1, tree_node* node2){
+    tree_node* parent_node = init_tree_node(-1, node1->value + node2->value);
+    parent_node-> left = node1;
+    parent_node-> right = node2;
+    return parent_node;
+}
+// Tree
+
+// what data structure to use ?: Damn, settled to a simple one
+
+void optimal_prefix_code(int n, int* A){
+    priority_q* q = init_priority_q(n);
+    for (int i = 0; i < n; i++){
+        insert(q, i, A[i]);
+    }
+    for (int i = 0; i < n; i++){
+        int key = extract_min(q);
+        tree_node* node1 = init_tree_node(key, A[key]);
+        key = extract_min(q);
+        tree_node* node2 = init_tree_node(key, A[key]);
+        tree_node* node_parent = combine_nodes(node1,node2);
+    }
+}
 
 int main(){
     int n;
@@ -89,21 +126,19 @@ int main(){
     // scanf("%d",&n);
     n = 4;
 
-    int** A = (int**)malloc(n*sizeof(int*));
-    for (int i = 0; i < n; i++){
-        A[i] = (int*)malloc(2*sizeof(int));
-    }
-    A[0][0] = 0;
-    A[0][1] = 3;
+    int* A = (int**)malloc(n*sizeof(int*));
 
-    A[1][0] = 1;
-    A[1][1] = 6;
 
-    A[2][0] = 2;
-    A[2][1] = 4;
+    A[0] = 3;        // A[i][1] = frequency of the alphabet
 
-    A[3][0] = 3;
-    A[3][1] = 10;
+ 
+    A[1] = 6;
+
+  
+    A[2] = 4;
+
+
+    A[3] = 10;
 
     optimal_prefix_code(n, A);    
 

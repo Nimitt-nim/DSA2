@@ -2,7 +2,7 @@
 
 void match(int n, int** s, int** c){
     for (int i = 0; i < n; i++){
-        
+
     }
 }
 
@@ -34,6 +34,16 @@ int main(){
         preferences_c= (int*)malloc(n*sizeof(int));
     }
     //
+    for (int i = 0; i < n; i++){
+        free(c[i]);
+        free(preferences_c[i]);
+        free(preferences_s[i]);
+        free(s[i]);
+    }
+    free(c);
+    free(s);
+    free(preferences_c);
+    free(preferences_s);
 
     return 0;
 }
