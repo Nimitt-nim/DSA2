@@ -55,8 +55,7 @@ void shift_up(priority_q* q, int i){
     }
 }
 
-void insert(priority_q* q,  int key, int value){
-    tree_node* node = init_tree_node(key, value);
+void insert(priority_q* q,  tree_node* node){
     q->size = q->size+1;
     q->nodes[q->size] = node;
     shift_up(q, q->size);
@@ -97,27 +96,30 @@ tree_node* init_tree_node(int key, int value){
 }
 
 tree_node* combine_nodes(tree_node* node1, tree_node* node2){
-    tree_node* parent_node = init_tree_node(-1, node1->value + node2->value);
-    parent_node-> left = node1;
-    parent_node-> right = node2;
-    return parent_node;
+    tree_node* parent_node = init_tree_node(-1, node1->value+node2->value);
+    parent_node->left = node1;
+    parent_node->right = node2;
 }
 // Tree
 
 // what data structure to use ?: Damn, settled to a simple one
 
-void optimal_prefix_code(int n, int* A){
+tree_node* optimal_prefix_code(int n, int* A){
     priority_q* q = init_priority_q(n);
     for (int i = 0; i < n; i++){
-        insert(q, i, A[i]);
+        tree_node* node = init_tree_node(i,A[i]);
+        insert(q, node);
+        free(node);
     }
-    for (int i = 0; i < n; i++){
+    while (q->size > 1){
         int key = extract_min(q);
         tree_node* node1 = init_tree_node(key, A[key]);
         key = extract_min(q);
         tree_node* node2 = init_tree_node(key, A[key]);
-        tree_node* node_parent = combine_nodes(node1,node2);
+        tree_node* parent_node = combine_nodes(node1,node2);
+        insert(q, parent_node);
     }
+    return q->nodes[0];
 }
 
 int main(){
