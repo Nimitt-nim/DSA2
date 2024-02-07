@@ -5,6 +5,7 @@ void print_stable_matching(int n, int*s){
     for (int i = 0; i < n; i++){
         printf("%d -> %d\n",i,s[i]);
     }
+    printf("\n");
 }
 
 int check_preference(int n, int* preferences, int c1, int c2){
@@ -26,7 +27,7 @@ void stable_matching(int n, int*s, int*c, int** preferences_s, int** preferences
             if (c[j] == -1){  // c is unmatched
                 int preferred_s = preferences_c[j][i];
                 if (s[preferred_s] == -1){    // student is unmatched
-                    s[j] = j;
+                    s[preferred_s] = j;
                     c[j] = preferred_s;
                 }
                 // j  has more preference than
@@ -39,11 +40,13 @@ void stable_matching(int n, int*s, int*c, int** preferences_s, int** preferences
                 }
             }
         }
+        printf("Round %d\n",i);
+        print_stable_matching(n, s);
     }
 }
 
 int main(){
-    int n;
+    int n = 3;
     // students
     int* s = (int*)malloc(n*sizeof(int));
     for (int i = 0; i < n; i++){
@@ -65,7 +68,6 @@ int main(){
     }
     // Initialising
     
-    n = 3;
     for (int i = 0; i <n; i++){
         s[i] = -1;
         c[i] = -1;
@@ -90,7 +92,8 @@ int main(){
     preferences_c[2][1] = 1;
     preferences_c[2][2] = 2;
 
-    stable_matching( n, s, c, preferences_s, preferences_c);
+    stable_matching(n, s, c, preferences_s, preferences_c);
+    printf("Final Matching :\n");
     print_stable_matching(n, s);
 
     for (int i = 0; i < n; i++){
