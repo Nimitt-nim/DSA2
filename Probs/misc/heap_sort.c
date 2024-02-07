@@ -1,5 +1,5 @@
 #include<stdio.h>
-#include<stdio.h>
+#include<stdlib.h>
 
 /// Min Priority Queue
 
@@ -57,9 +57,9 @@ void shift_up(priority_q* q, int i){
     }
 }
 
-void insert(priority_q* q,  int key, int value){
+void insert(priority_q* q, int value){
     q->size = q->size+1;
-    q->array[q->size] = key;
+    q->array[q->size] = value;
     shift_up(q, q->size);
 }
 
@@ -67,7 +67,7 @@ void delete(priority_q* q, int value){
 
 }
 
-void extract_min(priority_q* q){
+int extract_min(priority_q* q){
     if (q->size > 0){
         int temp = q->array[0];
         q->array[0] = q->array[q->size-1];
@@ -82,6 +82,29 @@ void extract_min(priority_q* q){
 
 /// Min Priority Queue
 
+void heap_sort(int* array, int n){
+    priority_q* q = init_priority_q(n);
+    for (int i = 0; i < n; i++){
+        insert(q, array[i]);
+    }
+    for (int i = 0; i < n; i++){
+        array[n-i-1] = extract_min(q);
+    }
+}
+
 int main(){
+    int n; 
+    n = 5;
+    int* array = (int*)malloc(n*sizeof(int));
+    array[0] = 1;
+    array[1] = 2;
+    array[2] = 3;
+    array[3] = 4;
+    array[4] = 5;
+    heap_sort(array, n);
+    for (int i = 0; i < n; i++){
+        printf("%d ",array[i]);
+    }
+    free(array);
     return 0;
 }
