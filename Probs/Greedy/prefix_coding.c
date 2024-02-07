@@ -149,6 +149,7 @@ int main(){
     A[3] = 10;
 
     optimal_prefix_code(n, A);    
+    free(A);
 
     return 0;
 }

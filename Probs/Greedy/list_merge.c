@@ -1,4 +1,6 @@
+#include<stdlib.h>
 #include<stdio.h>
+
 
 /// Min Priority Queue
 
@@ -47,17 +49,18 @@ void shift_down(priority_q* q, int i){
 }
 
 void shift_up(priority_q* q, int i){
-    while (i > 0 && q->array[parent(i)] < q->array[i]){
+    int p = parent(i);
+    while (i > 0 && q->array[p] < q->array[i]){
         int temp = q->array[i];
-        q->array[i] = q->array[parent(i)];
-        q->array[parent(i)] = temp;
-        i = parent(i);
+        q->array[i] = q->array[p];
+        q->array[p] = temp;
+        i = p;
     }
 }
 
-void insert(priority_q* q,  int key, int value){
-    q->array[q->size] = key;
-    shift_up(q, q->size);
+void insert(priority_q* q, int value){
+    q->array[q->size-1] = value;
+    shift_up(q, q->size-1);
     q->size = q->size+1;
 }
 
@@ -65,7 +68,7 @@ void delete(priority_q* q, int value){
 
 }
 
-void extract_min(priority_q* q){
+int extract_min(priority_q* q){
     if (q->size > 0){
         int temp = q->array[0];
         q->array[0] = q->array[q->size-1];
@@ -80,6 +83,14 @@ void extract_min(priority_q* q){
 
 /// Min Priority Queue
 
+minimum_merge_cost(int n, int* ls){
+    
+}
+
 int main(){
+    int n;
+    n = 5;
+    int* ls = (int*)malloc(n*sizeof(int));
+    minimum_merge_cost(n, ls);
     return 0;
 }

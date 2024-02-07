@@ -54,14 +54,14 @@ void MCM(int n, int *p, int **M, int **S){
             int minimum_cost_index = n+1;
             int current_cost;
             for (int k = i; k < j; k++){
-                current_cost = M[i][k] + M[k+1][j] + p[k]*p[k+1];
+                current_cost = M[i][k] + M[k+1][j] + p[i]*p[k+1]*p[j+1];
                 if (current_cost < minimum_cost){
                     minimum_cost = current_cost;
                     minimum_cost_index = k;
                 }
             }
             M[i][j] = minimum_cost;
-            S[i][j] = minimum_cost_index+1;
+            S[i][j] = minimum_cost_index;
         }
     }
 }

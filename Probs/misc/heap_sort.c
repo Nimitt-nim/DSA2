@@ -8,7 +8,11 @@ typedef struct{
     int size;
 }priority_q;
 
-
+void print_q(priority_q* q){
+    for (int i = 0; i < q->size; q++){
+        
+    }
+}
 
 priority_q* init_priority_q(int capacity){
     priority_q* pq = (priority_q*)malloc(sizeof(priority_q));
@@ -48,24 +52,24 @@ void shift_down(priority_q* q, int i){
 }
 
 void shift_up(priority_q* q, int i){
-    int p = parent(i);
-    while (i > 0 && q->array[p] < q->array[i]){
+    while (i > 0 && q->array[parent(i)] < q->array[i]){
         int temp = q->array[i];
-        q->array[i] = q->array[p];
-        q->array[p] = temp;
-        i = p;
+        q->array[i] = q->array[parent(i)];
+        q->array[parent(i)] = temp;
+        i = parent(i);
     }
 }
 
 void insert(priority_q* q, int value){
+    q->array[q->size-1] = value;
+    shift_up(q, q->size-1);
     q->size = q->size+1;
-    q->array[q->size] = value;
-    shift_up(q, q->size);
 }
 
 void delete(priority_q* q, int value){
 
 }
+
 
 int extract_min(priority_q* q){
     if (q->size > 0){
